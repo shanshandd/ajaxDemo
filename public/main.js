@@ -60,23 +60,24 @@ getJson.onclick = () => {
 }
 let n = 2;
 getPage.onclick = () => {
-
-    console.log(n)
     const request = new XMLHttpRequest();
     request.open('GET', `page${n}.json`)
     request.onreadystatechange = () => {
         if (request.readyState === 4 && request.status >= 200 && request.status < 300) {
             let arr = JSON.parse(request.response)
             let ul = document.querySelector('.liWrap');
-            arr.map((item) => {
-                let li = document.createElement('li');
-                li.innerText = item.id;
-                ul.appendChild(li)
+            arr.forEach((item) => {
+                let li;
+                if (!!item.end) {
+                    getPage.disabled = true
+                } else {
+                    li = document.createElement('li');
+                    li.innerText = item.id;
+                    ul.appendChild(li)
+                }
+
             })
             n += 1;
-        } else if (request.readyState === 4 && request.status === 404) {
-            // 后续再完善
-            getPage.disabled = true
         }
     }
     request.send()
